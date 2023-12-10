@@ -1,0 +1,94 @@
+{% load static %}
+
+    <div class="page">
+      <!-- Navbar -->
+                <header class="navbar navbar-expand-md" >
+                  <div class="container-xl">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
+                      <a href=".">
+                        <img src="{% static 'logo.svg' %}" width="32" height="32" alt="Catalogue" class="navbar-brand-image me-3">
+                      </a>
+                    </h1>
+                    <div class="navbar-nav flex-row order-md-last">
+                      <div class="nav-item d-none d-md-flex me-3">
+                        <div class="btn-list">
+                          <a href="{% url 'seller:register' %}" class="btn" target="_blank" rel="noreferrer">
+                            <b>Try For Free</b>
+                          </a>
+                          <a href="{% url 'seller:login' %}" class="btn" target="_blank" rel="noreferrer">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-big-right-lines-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                              <path d="M12.089 3.634a2 2 0 0 0 -1.089 1.78l-.001 2.585l-1.999 .001a1 1 0 0 0 -1 1v6l.007 .117a1 1 0 0 0 .993 .883l1.999 -.001l.001 2.587a2 2 0 0 0 3.414 1.414l6.586 -6.586a2 2 0 0 0 0 -2.828l-6.586 -6.586a2 2 0 0 0 -2.18 -.434l-.145 .068z" stroke-width="0" fill="currentColor" />
+                              <path d="M3 8a1 1 0 0 1 .993 .883l.007 .117v6a1 1 0 0 1 -1.993 .117l-.007 -.117v-6a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor" />
+                              <path d="M6 8a1 1 0 0 1 .993 .883l.007 .117v6a1 1 0 0 1 -1.993 .117l-.007 -.117v-6a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor" />
+                            </svg>
+                            Sign In
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </header>
+                <header class="navbar-expand-md">
+                  <div class="collapse navbar-collapse" id="navbar-menu">
+                    <div class="navbar">
+                      <div class="container-xl">
+                        <ul class="navbar-nav">
+                          <li class="nav-item">
+                            <a class="nav-link" href="{% url 'seller:features' %}" >
+                              <span class="nav-link-title">
+                                Features
+                              </span>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="{% url 'seller:solutions' %}" >
+                              <span class="nav-link-title">
+                                 Solutions
+                              </span>
+                            </a>
+                          </li>
+                          <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#navbar-third" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
+                              <span class="nav-link-title">
+                                Resources
+                              </span>
+                            </a>
+                            <div class="dropdown-menu">
+                              <a class="dropdown-item" href="./#">
+                                First
+                              </a>
+                              <a class="dropdown-item" href="./#">
+                                Second
+                              </a>
+                              <a class="dropdown-item" href="./#">
+                                Third
+                              </a>
+                            </div>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="{% url 'seller:pricing' %}" >
+                              <span class="nav-link-title">
+                                Plans and Pricing
+                              </span>
+                            </a>
+                          </li>
+                        </ul>
+                        <div class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last">
+                          <form action="./" method="get" autocomplete="off" novalidate>
+                            <div class="input-icon">
+                              <span class="input-icon-addon">
+                                <!-- Download SVG icon from http://tabler-icons.io/i/search -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                              </span>
+                              <input type="text" value="" class="form-control" placeholder="Search…" aria-label="Search in website">
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </header>

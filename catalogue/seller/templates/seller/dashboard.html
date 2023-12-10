@@ -1,0 +1,24 @@
+<!-- To load base file of html header and footer including css and js -->
+{% extends 'base.html' %}
+<!-- To load static files directory -->
+{% load static %}
+<!-- To Display Page Title -->
+{% block title %} Dashboard {% endblock %}
+
+<!-- Page content Starts From Here -->
+{% block content %}
+{% if user.is_authenticated %}
+
+{% include 'seller/sidebar.html' %}
+
+{% else %}
+    {% comment %}
+      User is not authenticated, redirect to login page.
+      You can customize the URL to match your login URL.
+    {% endcomment %}
+    <script>
+      window.location.href = "{% url 'seller:login' %}";
+    </script>
+<!-- Add more content for the dashboard as needed -->
+{% endif %}
+{% endblock %}
