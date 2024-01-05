@@ -1,0 +1,122 @@
+<!-- shop_page.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{ shop.name }} - Shop {% endblock %}
+
+{% block content %}
+{% include 'seller/navbar_shop.html' %}
+
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .page-wrapper {
+        flex: 1;
+    }
+
+    .page-body {
+        flex-grow: 1;
+    }
+
+    .sticky-footer {
+        flex-shrink: 0;
+    }
+
+    .footer {
+        background-color: #f8f9fa;
+        padding: 10px;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+
+      <div class="page-wrapper">
+             <!-- Page body -->
+            <div class="page-body">
+                <div class="container-xl">
+                    <div class="row">
+                        {% for product in products %}
+                            <div class="col-md-6 col-lg-3 mb-4">
+                                <div class="card card-link card-link-pop">
+                                    <div class="img-responsive img-responsive-1x1 card-img-top" style="background-image: url({{ product.media.url }})"></div>
+                                    <div class="card-body">
+                                        <h3 class="card-title">{{ product.name }}</h3>
+                                        <p class="text-muted">{{ product.description }}</p>
+                                    </div>
+                                    <!-- Card footer -->
+                                    <div class="card-footer d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <a href="javascript:void(0);" onclick="openWhatsApp('{{ shop.contact_number }}', '{{ shop.name }}', '{{ product.name }}','{{ product.get_absolute_url }}')" class="btn btn-primary btn-icon">
+                                                <i class="ti ti-brand-whatsapp"></i>
+                                            </a>
+                                            &nbsp
+                                            <a href="#" class="btn btn-primary btn-icon">
+                                                <i class="ti ti-send"></i>
+                                            </a>
+                                        </div>
+                                        <a href="{% url 'seller:product_detail' product.id %}" class="btn btn-primary">View Details</a>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            {% if forloop.counter|divisibleby:4 and not forloop.last %}
+                                </div><div class="row">
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+
+
+            <footer class="footer footer-transparent d-print-none sticky-footer">
+                <div class="container-xl">
+                    <div class="row text-center align-items-center flex-row-reverse">
+                          <div class="col-lg-auto ms-lg-auto">
+                            <ul class="list-inline list-inline-dots mb-0">
+                              <li class="list-inline-item">
+                                <a href="#" target="_blank" class="link-secondary" rel="noopener">
+                                  <!-- Download SVG icon from http://tabler-icons.io/i/heart -->
+                                  Made with
+                                  <svg xmlns="http://www.w3.org/2000/svg" class="icon text-pink icon-filled icon-inline" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /></svg>
+                                  in india for {{ shop.name }}.
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+                            <ul class="list-inline list-inline-dots mb-0">
+                              <li class="list-inline-item">
+                                Copyright &copy; 2023
+                                <a href="." class="link-secondary">Qubu</a>.
+                                All rights reserved.
+                              </li>
+                            </ul>
+                          </div>
+                    </div>
+                </div>
+            </footer>`
+      </div>
+    <!-- WhatsApp JS -->
+
+    <script>
+    function openWhatsApp(phoneNumber, shopName, productName, productLink) {
+        var message = encodeURIComponent("Hello " + shopName + ", I want to know more about this '" + productName + "'. Product Link: " + productLink);
+        var whatsappLink = "https://wa.me/" + phoneNumber + "?text=" + message;
+        window.open(whatsappLink, "_blank");
+    }
+    </script>
+
+
+    <!-- Tabler Core -->
+    <script src="{% static 'js/tabler.min.js' %}" defer></script>
+    <script src="{% static 'js/demo.min.js' %}" defer></script>
+{% endblock %}
+

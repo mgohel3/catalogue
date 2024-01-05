@@ -1,13 +1,17 @@
 # seller/views.py
-from django.shortcuts import render, redirect
-from .forms import SellerRegistrationForm, SellerProfileForm
-from .models import Seller
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
+from .forms import SellerRegistrationForm, SellerProfileForm, ShopForm, ShopEditForm  # Add ShopForm
+from .models import Seller, Shop, Product
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm
-from django.http import Http404
-
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.urls import reverse
+from django.core.paginator import Paginator
+from .forms import ProductUploadForm
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
 def home(request):
@@ -58,10 +62,12 @@ def seller_logout(request):
     messages.success(request, ("You are Logged out"))
     return redirect('home')
 
+@login_required
 def seller_dashboard(request):
-    # Add logic for the dashboard here
     show_header_and_footer = False
-    return render(request, 'seller/dashboard.html', {'show_header_and_footer': show_header_and_footer})
+    shop = request.user.seller.shop
+    return render(request, 'seller/dashboard.html', {'show_header_and_footer': show_header_and_footer, 'shop': shop})
+
 
 @login_required
 def seller_profile(request):
@@ -100,6 +106,25 @@ def solutions(request):
     page_title = 'solutions'
     return render(request, 'seller/solutions.html',{'show_header_and_footer': show_header_and_footer})
 
+
+from django.shortcuts import render
+
+
+def all_product(request, business_name=None):
+    show_header_and_footer = bool(business_name)
+
+    # Fetch all products from the database
+    all_products = Product.objects.filter(shop=request.user.seller.shop)
+
+    page_title = 'All Products'
+
+    return render(request, 'seller/all_product.html', {
+        'show_header_and_footer': show_header_and_footer,
+        'business_name': business_name,  # Pass the business_name to the template
+        'page_title': page_title,
+        'all_products': all_products,  # Pass all products to the template
+    })
+
 def pricing(request):
     show_header_and_footer = True
     page_title = 'Pricing'
@@ -109,3 +134,108 @@ def sidebar(request):
     show_header_and_footer = False
     page_title = ''
     return render(request, 'seller/sidebar.html',{'show_header_and_footer': show_header_and_footer})
+
+def settings(request):
+    show_header_and_footer = False
+    page_title = ''
+    return render(request, 'seller/settings.html',{'show_header_and_footer': show_header_and_footer})
+
+def settings_plan(request):
+    show_header_and_footer = False
+    page_title = ''
+    return render(request, 'seller/settings_plan.html',{'show_header_and_footer': show_header_and_footer})
+
+@login_required
+def create_shop(request):
+    # Check if the user already has a shop
+    existing_shop = request.user.seller.shop
+    if existing_shop:
+        # Redirect to the existing shop
+        return redirect('seller:shop_page', business_name=existing_shop.name)
+
+    if request.method == 'POST':
+        form = ShopForm(request.POST, request.FILES)
+        if form.is_valid():
+            shop = form.save(commit=False)
+            shop.user = request.user
+            shop.save()
+
+            # Ensure the shop is associated with the currently logged-in user's seller profile
+            seller_profile = request.user.seller
+            seller_profile.shop = shop
+            seller_profile.save()
+
+            return redirect('seller:shop_page', business_name=shop.name)
+    else:
+        form = ShopForm()
+
+    return render(request, 'seller/create_shop.html', {'form': form})
+
+def edit_shop(request):
+    shop = request.user.seller.shop
+
+    if request.method == 'POST':
+        form = ShopEditForm(request.POST, request.FILES, instance=shop)
+        if form.is_valid():
+            form.save()
+    else:
+        form = ShopEditForm(instance=shop)
+
+    return render(request, 'seller/edit_shop.html', {'form': form, 'shop': shop})
+
+def shop_page(request, business_name):
+    shop = get_object_or_404(Shop, name=business_name)
+    products = Product.objects.filter(shop=shop)  # Assuming a reverse relation from Shop to Product
+
+    return render(request, 'seller/shop_page.html', {'shop': shop, 'products': products})
+
+def add_product(request):
+    if request.user.seller.shop:
+        if request.method == 'POST':
+            form = ProductUploadForm(request.POST, request.FILES)
+            if form.is_valid():
+                product = form.save(commit=False)
+                product.shop = request.user.seller.shop
+                product.save()
+
+                # Generate the URL for the 'shop_page' view with the business_name parameter
+                shop_page_url = reverse('seller:shop_page', kwargs={'business_name': request.user.seller.shop.name})
+
+                return redirect(shop_page_url)
+        else:
+            form = ProductUploadForm()
+
+        return render(request, 'seller/add_product.html', {'form': form})
+    else:
+        return redirect('seller:dashboard')
+
+def edit_product(request, product_id):
+    if request.user.seller.shop:
+        # Fetch the product instance from the database
+        product = get_object_or_404(Product, id=product_id)
+
+        # Check if the logged-in user owns the shop associated with the product
+        if product.shop == request.user.seller.shop:
+            if request.method == 'POST':
+                # Populate the form with the current product instance and the posted data
+                form = ProductUploadForm(request.POST, request.FILES, instance=product)
+                if form.is_valid():
+                    form.save()
+                    # Redirect to the shop page after successful update
+                    shop_page_url = reverse('seller:all_product')
+                    return redirect(shop_page_url)
+            else:
+                # Populate the form with the current product instance for editing
+                form = ProductUploadForm(instance=product)
+
+            return render(request, 'seller/edit_product.html', {'form': form, 'product': product})
+        else:
+            # If the user doesn't own the shop, you can handle it as needed (e.g., show an error page)
+            return render(request, 'seller/error.html', {'error_message': 'You do not have permission to edit this product.'})
+    else:
+        return redirect('seller:all_product')
+
+def product_detail(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    shop = product.shop
+    return render(request, 'seller/product.html', { 'product': product, 'shop': shop} )

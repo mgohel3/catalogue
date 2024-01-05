@@ -1,0 +1,114 @@
+<!-- product.html -->
+{% extends 'base.html' %}
+{% load static %}
+{% load social_share %}
+
+{% block title %} {{ product.name }} - {{ shop.name }} {% endblock %}
+
+{% block content %}
+{% include 'seller/navbar_shop.html' %}
+
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .page-wrapper {
+        flex: 1;
+    }
+
+    .page-body {
+        flex-grow: 1;
+    }
+
+    .sticky-footer {
+        flex-shrink: 0;
+    }
+
+    .footer {
+        background-color: #f8f9fa;
+        padding: 10px;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+<div class="page-wrapper">
+    <!-- Page body -->
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="row gx-4 gx-lg-5 align-items-center">
+                <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="{{ product.media.url }}" alt="..." /></div>
+                <div class="col-md-6">
+                    <h1 class="display-5 fw-bolder">{{ product.name }}</h1>
+                    <div class="small mb-1">SKU: {{ product.id }}</div>
+                    <h4><strong>Category :</strong> {{ product.category }}</h4>
+                    <div class="fs-5 mb-5">
+                        <h4>
+                        <span class="text-decoration-line-through"><strong>Price :</strong>{{ product.price }}</span>
+                        <span><strong>Sale Price :</strong>{{ product.sale_price }}</span>
+                        </h4>
+                    </div>
+                    <p class="lead"><strong>Description</strong> : {{ product.description }}</p>
+                    <div class="d-flex">
+                        <a href="{% url 'seller:shop_page' business_name=shop.name %}" class="btn btn-outline-dark flex-shrink-0" role="button">
+                            <i class="bi bi-house-fill"></i> Go to Home
+                        </a>
+                        &nbsp
+                        <div class="card-footer d-flex flex-column justify-content-center">
+                            <a href="javascript:void(0);" onclick="openWhatsApp('{{ shop.contact_number }}', '{{ shop.name }}', '{{ product.name }}')" class="btn btn-primary">WhatsApp</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add other sections or details as needed -->
+
+</div>
+
+<footer class="footer footer-transparent d-print-none sticky-footer">
+    <div class="container-xl">
+        <div class="row text-center align-items-center flex-row-reverse">
+            <div class="col-lg-auto ms-lg-auto">
+                <ul class="list-inline list-inline-dots mb-0">
+                    <li class="list-inline-item">
+                        <a href="#" target="_blank" class="link-secondary" rel="noopener">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/heart -->
+                            Made with
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon text-pink icon-filled icon-inline" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /></svg>
+                            in India for {{ shop.name }}.
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+                <ul class="list-inline list-inline-dots mb-0">
+                    <li class="list-inline-item">
+                        Copyright &copy; 2023
+                        <a href="." class="link-secondary">Qubu</a>.
+                        All rights reserved.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- WhatsApp JS -->
+<script>
+    function openWhatsApp(phoneNumber, shopName, productName) {
+        var message = encodeURIComponent("Hello " + shopName + ", I want to know more about this '" + productName + "'");
+        var whatsappLink = "https://wa.me/" + phoneNumber + "?text=" + message;
+        window.open(whatsappLink, "_blank");
+    }
+</script>
+
+<!-- Tabler Core -->
+<script src="{% static 'js/tabler.min.js' %}" defer></script>
+<script src="{% static 'js/demo.min.js' %}" defer></script>
+
+{% endblock %}

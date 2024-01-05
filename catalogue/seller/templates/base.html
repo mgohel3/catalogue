@@ -6,7 +6,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>{% block title %}{% endblock %} - Catalogue</title>
+    <title>{% block title %}{{ shop.name }}{% endblock %}</title>
     <!-- CSS files -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
     <link href="{% static 'css/tabler.min.css' %}" rel="stylesheet"/>
@@ -14,7 +14,9 @@
     <link href="{% static 'css/tabler-payments.min.css' %}" rel="stylesheet"/>
     <link href="{% static 'css/tabler-vendors.min.css' %}" rel="stylesheet"/>
     <link href="{% static 'css/demo.min.css' %}" rel="stylesheet"/>
-    <!-- JS -->
+
+
+    <!-- Tabler Core -->
 
 
     <style>
@@ -24,15 +26,32 @@
       }
       body {
         font-feature-settings: "cv03", "cv04", "cv11";
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
       }
+          #content {
+            flex: 1;
+        }
     </style>
+      <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-m5VRK9qN0A76WltPde3f7ii3CesAVPGcdG6X3/mc7vP5j+6bc8uqHqVZP41a6cwX" crossorigin="anonymous"></script>
+
   </head>
 
   <body>
+    <script src="{% static 'js/demo-theme.min.js' %}" defer></script>
+    <div class="page">
+
         {% if show_header_and_footer %}
                 {% include 'seller/header.html' %}
         {% endif %}
-
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
             <!-- Your page content here -->
             <div id="content">
                 {% block content %}{% endblock %}

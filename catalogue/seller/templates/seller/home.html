@@ -1,14 +1,144 @@
-<!-- To load base file of html header and footer including css and js -->
+<!-- To load base file of HTML header and footer including CSS and JS -->
 {% extends 'base.html' %}
+
 <!-- To load static files directory -->
 {% load static %}
+
 <!-- To Display Page Title -->
 {% block title %} Highlight Your Products, Shine Online. {% endblock %}
 
-
 <!-- Page content Starts From Here -->
-
 {% block content %}
-    <h2>Your Page Content Goes Here</h2>
-    <!-- Add the specific content for this page -->
+    <div class="container-fluid px-0">
+        <div class="px-4 pt-5 my-5 text-center border-bottom">
+            <h1 class="display-4 fw-bold text-body-emphasis">Go global with <strong>qubu's</strong> <br>robust e-commerce solution.</h1>
+            <div class="col-lg-6 mx-auto">
+                <p class="lead mb-4">Effortlessly start your own eye-catching online store, bringing in and converting more customers than ever before.</p>
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+                    <a href="{% url 'seller:register' %}" class="btn btn-primary btn-lg px-4 me-sm-3" role="button">Create your store</a>
+                </div>
+            </div>
+            <div class="overflow-hidden" style="max-height: 30vh;">
+                <div class="container px-5">
+                    <img src="{% static 'img/browser/qubu.png' %}" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Example image" width="700" height="500" loading="lazy">
+                </div>
+            </div>
+        </div>
+
+        <div class="container pt-5 my-5">
+            <div class="container bg-light p-4">
+                <div class="row pt-5 my-5 text-center">
+                    <h1 class="display-6 fw-bold text-body-emphasis"> Qubu—your best choice, whether you're starting up or already established. </h1>
+                </div>
+                <div class="row pt-5 my-5">
+                    <div class="col-lg-6">
+                        <img class="w-100 shadow" src="{% static 'img/index/qubu2.png' %}" />
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="p-5 mt-4">
+                            <h1 class="display-6 fw-bold">Get started fast</h1>
+                            <ul class="star-purple empty-title text-muted">
+                                <li>Add or import many products at once.</li>
+                                <li>Loads 10 times faster than other options.</li>
+                                <li>Your website works well on computers and mobiles.</li>
+                                <li>Make your website look the way you want without hassle.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pt-5 my-5">
+                    <div class="col-lg-6">
+                        <div class="p-5 mt-4">
+                            <h1 class="display-6 fw-bold">Expand your business at a faster pace</h1>
+                            <ul class="star-purple empty-title text-muted">
+                                <li>Enjoy unlimited products inventory with minimal fees.</li>
+                                <li>Easily add staff accounts and assign different roles.</li>
+                                <li>We ensure a 99.9% uptime, keeping your store open for business.</li>
+                                <li>Generate a QR code for your business to boost online and offline promotion.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <img class="w-100 shadow" src="{% static 'img/index/qubu3.png' %}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container pt-5 my-5">
+            <h1 class="text-center display-6 fw-bold">Simplify E-commerce, Boost Success.</h1>
+            <p class="text-center">Empower your online business with essential growth.</p>
+
+            <div class="row mt-4">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="empty">
+                            <div class="empty-img"><img src="{% static 'img/icons/1.png' %}" height="128" alt="Lightning-Fast Performance"></div>
+                            <p class="empty-title">Lightning-Fast Performance</p>
+                            <p class="empty-subtitle text-muted">Ensure a top-notch shopping experience with blazing site speed.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="empty">
+                            <div class="empty-img"><img src="{% static 'img/icons/2.png' %}" height="128" alt="User-Friendly Accounts"></div>
+                            <p class="empty-title">User-Friendly Accounts</p>
+                            <p class="empty-subtitle text-muted">Seamlessly manage user and staff accounts for efficient operations.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="empty">
+                            <div class="empty-img"><img src="{% static 'img/icons/3.png' %}" height="128" alt="Instant WhatsApp Connectivity"></div>
+                            <p class="empty-title">Instant WhatsApp Connectivity</p>
+                            <p class="empty-subtitle text-muted">Foster direct customer interaction through WhatsApp for inquiries.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="empty">
+                            <div class="empty-img"><img src="{% static 'img/icons/4.png' %}" height="128" alt="QR Code Convenience"></div>
+                            <p class="empty-title">QR Code Convenience</p>
+                            <p class="empty-subtitle text-muted">Simplify access and sharing with easily generated QR codes.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="empty">
+                            <div class="empty-img"><img src="{% static 'img/icons/5.png' %}" height="128" alt="Mobile Responsive Design"></div>
+                            <p class="empty-title">Mobile Responsive Design</p>
+                            <p class="empty-subtitle text-muted">Enjoy a responsive and consistent experience across all devices.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="empty">
+                            <div class="empty-img"><img src="{% static 'img/icons/6.png' %}" height="128" alt="Effortless PDF Sharing"></div>
+                            <p class="empty-title">Effortless PDF Sharing</p>
+                            <p class="empty-subtitle text-muted">Share product information seamlessly with the ability to generate PDF files.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-4 pt-5 my-5 text-center border-bottom bg-light">
+            <h1 class="display-4 fw-bold text-body-emphasis">Transform your business <strong>dreams</strong> <br>into achievements with us!</h1>
+            <div class="col-lg-6 mx-auto">
+                <p class="lead mb-4">Effortlessly start your own eye-catching online store, bringing in and converting more customers than ever before.</p>
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5 x-4 pt-5 my-5">
+                    <div class="col-lg-6 text-center">
+                        <a href="{% url 'seller:register' %}" class="btn btn-primary btn-lg px-4 me-sm-3" role="button">Create your store</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

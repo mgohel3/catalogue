@@ -14,18 +14,24 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
 from seller.views import home  # Import the home view
 from django.conf import settings
 from django.conf.urls.static import static
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('seller/', include('seller.urls')),
+    path('seller/', include('seller.urls',namespace='seller')),
     path('', home, name='home'),  # Add this line for the root path
 ]
 # Serve static files during development
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Configure Admin Title
+admin.site.site_header = "Catalogue Admin"
+admin.site.site_title = "Catalogue Admin"
+admin.site.index_title = "Welcome Admin"

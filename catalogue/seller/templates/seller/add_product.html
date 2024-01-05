@@ -1,0 +1,169 @@
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .page-wrapper {
+        flex: 1;
+    }
+
+    .footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #fff; /* Set the background color as needed */
+        z-index: 1000; /* Set the z-index to make sure it appears above other elements */
+    }
+</style>
+<!-- To load base file of html header and footer including css and js -->
+{% extends 'base.html' %}
+<!-- To load static files directory -->
+{% load static %}
+<!-- To Display Page Title -->
+{% block title %} Dashboard {% endblock %}
+<!-- Page content Starts From Here -->
+{% block content %}
+{% if user.is_authenticated %}
+
+{% include 'seller/sidebar.html' %}
+    <div class="page-wrapper">
+        <!-- Page header -->
+        <div class="page-header d-print-none">
+          <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <h2 class="page-title">
+                  Add Product
+                </h2>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Page body -->
+        <div class="page-body">
+          <div class="container-xl">
+            <div class="row row-cards">
+              <div class="col-lg-8">
+                <div class="card">
+                  <div class="card-body">
+                    <h3 class="card-title">Product Information</h3> <hr>
+                    <form action="{% url 'seller:add_product' %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="mb-3 col-lg-6">
+                                        <label for="name" class="form-label">Product Name</label>
+                                        <input type="text" class="form-control" name="name" placeholder="Enter product name" autocomplete="off">
+                                    </div>
+                                    <div class="mb-3 col-lg-6">
+                                        <label for="category" class="form-label">Category</label>
+                                        <input type="text" class="form-control" name="category" placeholder="Enter Category" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 col-lg-12">
+                                 <label for="description" class="form-label">Description</label>
+                                 <textarea rows="5" name="description" for="description" class="form-control" placeholder="Add Product Description Here" ></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="media" class="form-label">Upload product image</label>
+                                <input type="file" class="form-control" name="media" />
+                            </div>
+                            <div class="mb-3 col-lg-6">
+                                        <label for="price" class="form-label">Price</label>
+                                        <input type="text" class="form-control" name="price" placeholder="₹ 0.00" autocomplete="off">
+                                    </div>
+                            <div class="card-footer text-end">
+                              <button type="submit" class="btn btn-primary">Add Product</button>
+                            </div>
+                        </form>
+                  </div>
+                    </div>
+                    </div>
+                  <div class="col-lg-4">
+                    <div class="card">
+                      <div class="card-body">
+                        <h3 class="card-title">Coming Soon</h3>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer footer-transparent d-print-none">
+          <div class="container-xl">
+            <div class="row text-center align-items-center flex-row-reverse">
+              <div class="col-lg-auto ms-lg-auto">
+                <ul class="list-inline list-inline-dots mb-0">
+                  <li class="list-inline-item"><a href="https://tabler.io/docs" target="_blank" class="link-secondary" rel="noopener">Documentation</a></li>
+                  <li class="list-inline-item"><a href="./license.html" class="link-secondary">License</a></li>
+                  <li class="list-inline-item"><a href="https://github.com/tabler/tabler" target="_blank" class="link-secondary" rel="noopener">Source code</a></li>
+                  <li class="list-inline-item">
+                    <a href="https://github.com/sponsors/codecalm" target="_blank" class="link-secondary" rel="noopener">
+                      <!-- Download SVG icon from http://tabler-icons.io/i/heart -->
+                      <svg xmlns="http://www.w3.org/2000/svg" class="icon text-pink icon-filled icon-inline" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /></svg>
+                      Sponsor
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+                <ul class="list-inline list-inline-dots mb-0">
+                  <li class="list-inline-item">
+                    Copyright &copy; 2023
+                    <a href="." class="link-secondary">Qubu</a>.
+                    All rights reserved.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+{% else %}
+    {% comment %}
+      User is not authenticated, redirect to login page.
+      You can customize the URL to match your login URL.
+    {% endcomment %}
+    <script>
+      window.location.href = "{% url 'seller:login' %}";
+    </script>
+    <script>
+    // Add this script to handle the form submission and modal display
+    document.getElementById('product-form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Handle the form submission using JavaScript, e.g., using Fetch API or XMLHttpRequest
+        // You can also use a JavaScript framework like Axios for easier handling
+
+        // After successful submission, close the modal
+        var modal = new bootstrap.Modal(document.getElementById('add-product'));
+        modal.hide();
+    });
+</script>
+    <script src="{% static 'js/dialog.js' %}" defer></script>
+        <!-- Libs JS -->
+    <script src= "{% static 'libs/list.js/dist/list.js' %}" defer></script>
+    <script src= "{% static 'libs/list.js/dist/list.min.js' %}" defer></script>
+    <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}" defer></script>
+    <script src="{% static 'libs/jsvectormap/dist/js/jsvectormap.min.js' %}" defer></script>
+    <script src="{% static 'libs/jsvectormap/dist/maps/world.js' %}" defer></script>
+    <script src= "{% static 'libs/jsvectormap/dist/maps/world-merc.js' %}" defer></script>
+
+    <!-- Tabler Core -->
+
+    <script src="{% static 'js/tabler.min.js' %}" defer></script>
+
+    <!-- Tabler Core -->
+    <script src="{% static 'js/demo.min.js' %}" defer></script>
+    <script src="{% static 'js/demo-theme.min.js' %}" defer></script>
+
+<!-- Add more content for the dashboard as needed -->
+{% endif %}
+{% endblock %}
