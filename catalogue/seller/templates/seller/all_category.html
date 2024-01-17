@@ -1,0 +1,19 @@
+<!-- seller/templates/seller/all_category.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h2>All Categories</h2>
+
+    {% if categories %}
+      <ul>
+        {% for category in categories %}
+          <li>{{ category.name }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No categories available.</p>
+    {% endif %}
+  </div>
+{% endblock %}

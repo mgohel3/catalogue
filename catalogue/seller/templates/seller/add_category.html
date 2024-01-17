@@ -1,0 +1,11 @@
+<!-- seller/templates/seller/add_category.html -->
+
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Add Category</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Category</button>
+  </form>
+{% endblock %}

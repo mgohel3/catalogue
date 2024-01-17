@@ -3,9 +3,8 @@ from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from .models import Seller
-from .models import Shop
-from .models import Product
+from .models import Seller, Shop, Product, Banner, Category
+
 
 class SellerRegistrationForm(UserCreationForm):
     business_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class':'form-control'}), required=True)
@@ -46,4 +45,20 @@ class ProductUploadForm(forms.ModelForm):
         model = Product
         fields = ['name', 'category', 'description', 'media', 'price']
 
+class BannerUploadForm(forms.ModelForm):
+    class Meta:
+        model = Banner
+        fields = ['image']
 
+    def __init__(self, *args, **kwargs):
+        super(BannerUploadForm, self).__init__(*args, **kwargs)
+        self.fields['image'].widget.attrs['accept'] = 'image/*'  # Allow only image files
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name', 'parent_category']
+        labels = {
+            'name': 'Category Name',
+            'parent_category': 'Parent Category (optional)',
+        }

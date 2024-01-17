@@ -1,0 +1,27 @@
+<!-- show_banners.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div id="carousel-indicators-thumb" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            <div class="carousel-indicators carousel-indicators-thumb">
+              {% for banner in banners %}
+                <button type="button" data-bs-target="#carousel-indicators-thumb" data-bs-slide-to="{{ forloop.counter0 }}" class="ratio ratio-4x3{% if forloop.first %} active{% endif %}" style="background-image: url({{ banner.image.url }})"></button>
+              {% endfor %}
+            </div>
+            <div class="carousel-inner">
+              {% for banner in banners %}
+                <div class="carousel-item{% if forloop.first %} active{% endif %}">
+                  <img class="d-block w-100" alt="" src="{{ banner.image.url }}">
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

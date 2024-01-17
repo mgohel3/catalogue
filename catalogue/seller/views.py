@@ -1,8 +1,8 @@
 # seller/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .forms import SellerRegistrationForm, SellerProfileForm, ShopForm, ShopEditForm  # Add ShopForm
-from .models import Seller, Shop, Product
+from .models import Seller, Shop, Product, Banner, Category
+from .forms import SellerRegistrationForm, SellerProfileForm, ShopForm, ShopEditForm, BannerUploadForm, CategoryForm # Add ShopForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -12,7 +12,6 @@ from django.core.paginator import Paginator
 from .forms import ProductUploadForm
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-
 
 def home(request):
     show_header_and_footer = True
@@ -171,8 +170,9 @@ def create_shop(request):
 
     return render(request, 'seller/create_shop.html', {'form': form})
 
-def edit_shop(request):
-    shop = request.user.seller.shop
+def edit_shop(request, business_name):
+    # Retrieve the shop using the business_name
+    shop = get_object_or_404(Shop, name=business_name)
 
     if request.method == 'POST':
         form = ShopEditForm(request.POST, request.FILES, instance=shop)
@@ -186,8 +186,8 @@ def edit_shop(request):
 def shop_page(request, business_name):
     shop = get_object_or_404(Shop, name=business_name)
     products = Product.objects.filter(shop=shop)  # Assuming a reverse relation from Shop to Product
-
-    return render(request, 'seller/shop_page.html', {'shop': shop, 'products': products})
+    banners = Banner.objects.filter(shop=shop)  # Fetch banners for the specific shop
+    return render(request, 'seller/shop_page.html', {'shop': shop, 'products': products,'banners': banners})
 
 def add_product(request):
     if request.user.seller.shop:
@@ -201,18 +201,19 @@ def add_product(request):
                 # Generate the URL for the 'shop_page' view with the business_name parameter
                 shop_page_url = reverse('seller:shop_page', kwargs={'business_name': request.user.seller.shop.name})
 
-                return redirect(shop_page_url)
+                return redirect('seller:all_product')
         else:
             form = ProductUploadForm()
 
         return render(request, 'seller/add_product.html', {'form': form})
     else:
-        return redirect('seller:dashboard')
+        return redirect('seller:all_product')
 
 def edit_product(request, product_id):
     if request.user.seller.shop:
         # Fetch the product instance from the database
         product = get_object_or_404(Product, id=product_id)
+        category = Category.objects.all()  # Fetch all existing categories
 
         # Check if the logged-in user owns the shop associated with the product
         if product.shop == request.user.seller.shop:
@@ -239,3 +240,94 @@ def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     shop = product.shop
     return render(request, 'seller/product.html', { 'product': product, 'shop': shop} )
+def delete_product(request, product_id):
+    if request.user.seller.shop:
+        # Fetch the product instance from the database
+        product = get_object_or_404(Product, id=product_id)
+
+        # Check if the logged-in user owns the shop associated with the product
+        if product.shop == request.user.seller.shop:
+            # Delete the product from the database
+            product.delete()
+
+            # Redirect to the shop page after successful deletion
+            shop_page_url = reverse('seller:all_product')
+            return redirect(shop_page_url)
+        else:
+            # If the user doesn't own the shop, you can handle it as needed (e.g., show an error page)
+            return render(request, 'seller/error.html', {'error_message': 'You do not have permission to delete this product.'})
+    else:
+        return redirect('seller:all_product')
+
+
+@login_required
+def add_banner(request):
+    if request.method == 'POST':
+        banner_form = BannerUploadForm(request.POST, request.FILES)
+        if banner_form.is_valid():
+            # Create a new Banner instance and associate it with the logged-in seller's shop
+            banner_instance = banner_form.save(commit=False)
+
+            # Ensure the shop is associated with the currently logged-in user's seller profile
+            banner_instance.shop = request.user.seller.shop
+
+            banner_instance.save()
+
+            return redirect('seller:all_banners')  # Redirect to the dashboard or another page after successful upload
+    else:
+        banner_form = BannerUploadForm()
+
+    return render(request, 'seller/add_banner.html', {'banner_form': banner_form})
+
+def show_banners(request):
+    banners = Banner.objects.all()
+    return render(request, 'seller/show_banners.html', {'banners': banners})
+
+def all_banners(request):
+    # Fetch all banners from the database
+    all_banners = Banner.objects.filter(shop=request.user.seller.shop)
+
+    # Assuming you have a template named 'seller/all_banners.html'
+    return render(request, 'seller/all_banners.html', {'all_banners': all_banners})
+
+def delete_banner(request, banner_id):
+    if request.user.seller.shop:
+        # Fetch the banner instance from the database
+        banner = get_object_or_404(Banner, id=banner_id)
+
+        # Check if the logged-in user owns the shop associated with the banner
+        if banner.shop == request.user.seller.shop:
+            # Delete the banner from the database
+            banner.delete()
+
+            # Redirect to the dashboard or another page after successful deletion
+            messages.success(request, 'Banner deleted successfully.')
+            return redirect('seller:all_banners')
+        else:
+            # If the user doesn't own the shop, you can handle it as needed (e.g., show an error page)
+            return render(request, 'seller/error.html', {'error_message': 'You do not have permission to delete this banner.'})
+    else:
+        return redirect('seller:all_banners')
+
+@login_required
+def add_category(request):
+    show_header_and_footer = False
+
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.save()
+
+            # Redirect to the category list page after successful category creation
+            return redirect(reverse('seller:all_category'))
+    else:
+        form = CategoryForm()
+
+    return render(request, 'seller/add_category.html', {'form': form, 'show_header_and_footer': show_header_and_footer})
+
+def all_category(request):
+    # Fetch all categories from the database
+    categories = Category.objects.all()
+
+    return render(request, 'seller/all_category.html', {'categories': categories})

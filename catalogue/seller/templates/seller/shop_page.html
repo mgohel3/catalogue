@@ -2,7 +2,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %} {{ shop.name }} - Shop {% endblock %}
+{% block title %} {{ shop.name }} - Best Ecommerce Shop By QUBU India {% endblock %}
 
 {% block content %}
 {% include 'seller/navbar_shop.html' %}
@@ -16,23 +16,16 @@
 
     .page-wrapper {
         flex: 1;
+        display: flex;
+        flex-direction: column;
     }
 
     .page-body {
         flex-grow: 1;
     }
 
-    .sticky-footer {
-        flex-shrink: 0;
-    }
-
     .footer {
-        background-color: #f8f9fa;
-        padding: 10px;
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        width: 100%;
+        margin-top: auto;
     }
 </style>
 
@@ -40,7 +33,10 @@
              <!-- Page body -->
             <div class="page-body">
                 <div class="container-xl">
-                    <div class="row">
+                    <div class="row mt-3">
+                              {% include 'seller/show_banners.html' %}
+                    </div>
+                    <div class="row mt-6">
                         {% for product in products %}
                             <div class="col-md-6 col-lg-3 mb-4">
                                 <div class="card card-link card-link-pop">
@@ -73,10 +69,8 @@
                     </div>
                 </div>
             </div>
-
-
-
-            <footer class="footer footer-transparent d-print-none sticky-footer">
+      </div>
+            <footer class="footer d-print-none">
                 <div class="container-xl">
                     <div class="row text-center align-items-center flex-row-reverse">
                           <div class="col-lg-auto ms-lg-auto">
@@ -102,8 +96,13 @@
                           </div>
                     </div>
                 </div>
-            </footer>`
-      </div>
+            </footer>
+          <style>
+    .footer {
+        border-top: 1px solid #ccc; /* Set the border color and style as needed */
+    }
+</style>
+
     <!-- WhatsApp JS -->
 
     <script>

@@ -1,0 +1,196 @@
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .page-wrapper {
+        display: flex;
+        flex: 1;
+    }
+
+    .content-wrapper {
+        flex: 1;
+        padding-left: 250px; /* Adjust the sidebar width as needed */
+    }
+
+    .page-body {
+        flex-grow: 1;
+    }
+
+    @media (max-width: 768px) {
+        .page-wrapper {
+            flex-direction: column-reverse;
+        }
+
+        .content-wrapper {
+            padding-left: 0;
+        }
+    }
+</style>
+<!-- To load base file of html header and footer including css and js -->
+{% extends 'base.html' %}
+<!-- To load static files directory -->
+{% load static %}
+<!-- To Display Page Title -->
+{% block title %} All Banners {% endblock %}
+<!-- Page content Starts From Here -->
+{% block content %}
+{% if user.is_authenticated %}
+{% include 'seller/add_banner_modal.html' %}
+<div class="page-wrapper">
+        <!-- Sidebar -->
+        {% include 'seller/sidebar.html' %}
+        <!-- Page Body -->
+    <div class="content-wrapper">
+            <div class="container-xxl d-flex flex-column justify-content-center mt-4">
+                <div class="container">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h3 class="card-title">All Banners</h3>
+                            <!-- Add Banner Button -->
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-add-banner">
+                                <i class="ti ti-plus"></i> &nbsp Add Banner
+                            </button>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table card-table table-vcenter text-nowrap datatable">
+                                <thead>
+                                    <tr>
+                                        <th>Banner Image</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for banner in all_banners %}
+                                    <tr>
+                                        <td>
+                                            <div class="img-responsive img-responsive-1x1 card-img-top" style="background-image: url({{ banner.image.url }})"></div>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <!-- Edit button -->
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                        data-bs-target="#modal-edit-banner{{ banner.pk }}">
+                                                    <i class="ti ti-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <!-- Delete button -->
+                                            <div class="btn-group" role="group">
+                                                <a href="{% url 'seller:delete_banner' banner.id %}" class="btn btn-danger">
+                                                    <i class="ti ti-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr id="details_{{ banner.id }}" style="display: none;">
+                                        <td colspan="3">
+                                            <!-- Additional details or information here -->
+                                        </td>
+                                    </tr>
+                                    {% include 'seller/edit_banner_modal.html' %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer d-flex align-items-center">
+                            <p class="m-0 text-muted">Showing <span>{{ all_banners|length }}</span> entries</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+        <footer class="footer footer-transparent d-print-none">
+          <div class="container-xl">
+            <div class="row text-center align-items-center flex-row-reverse">
+              <div class="col-lg-auto ms-lg-auto">
+                <ul class="list-inline list-inline-dots mb-0">
+                  <li class="list-inline-item"><a href="https://tabler.io/docs" target="_blank" class="link-secondary" rel="noopener">Documentation</a></li>
+                  <li class="list-inline-item"><a href="./license.html" class="link-secondary">License</a></li>
+                  <li class="list-inline-item"><a href="https://github.com/tabler/tabler" target="_blank" class="link-secondary" rel="noopener">Source code</a></li>
+                  <li class="list-inline-item">
+                    <a href="https://github.com/sponsors/codecalm" target="_blank" class="link-secondary" rel="noopener">
+                      <!-- Download SVG icon from http://tabler-icons.io/i/heart -->
+                      <svg xmlns="http://www.w3.org/2000/svg" class="icon text-pink icon-filled icon-inline" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /></svg>
+                      Sponsor
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+                <ul class="list-inline list-inline-dots mb-0">
+                  <li class="list-inline-item">
+                    Copyright &copy; 2023
+                    <a href="." class="link-secondary">Qubu</a>.
+                    All rights reserved.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+{% else %}
+    {% comment %}
+      User is not authenticated, redirect to login page.
+      You can customize the URL to match your login URL.
+    {% endcomment %}
+    <script>
+      window.location.href = "{% url 'seller:login' %}";
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.delete-banner-btn').click(function () {
+                var bannerId = $(this).data('banner-id');
+
+                // Make an AJAX request to fetch product details
+                $.ajax({
+                    url: '{% url "seller:fetch_banner_details" %}',  // Update with your URL pattern
+                    type: 'GET',
+                    data: { 'product_id': productId },
+                    success: function (data) {
+                        // Assuming the response contains the HTML for the product details modal
+                        $('#modal-delete .modal-body').html(data);
+
+                        // Show the modal after updating its content
+                        $('#modal-delete').modal('show');
+                    },
+                    error: function () {
+                        console.error('Failed to fetch product details for deletion.');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script src="{% static 'js/dialog.js' %}" defer></script>
+        <!-- Libs JS -->
+    <script src= "{% static 'libs/list.js/dist/list.js' %}" defer></script>
+    <script src= "{% static 'libs/list.js/dist/list.min.js' %}" defer></script>
+    <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}" defer></script>
+    <script src="{% static 'libs/jsvectormap/dist/js/jsvectormap.min.js' %}" defer></script>
+    <script src="{% static 'libs/jsvectormap/dist/maps/world.js' %}" defer></script>
+    <script src= "{% static 'libs/jsvectormap/dist/maps/world-merc.js' %}" defer></script>
+
+    <!-- Tabler Core -->
+
+    <script src="{% static 'js/tabler.min.js' %}" defer></script>
+
+    <!-- Tabler Core -->
+    <script src="{% static 'js/demo.min.js' %}" defer></script>
+    <script src="{% static 'js/demo-theme.min.js' %}" defer></script>
+
+<!-- Add more content for the dashboard as needed -->
+{% endif %}
+{% endblock %}

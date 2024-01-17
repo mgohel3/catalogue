@@ -1,0 +1,67 @@
+{% load static %}
+{% if user.is_authenticated %}
+
+<div class="modal modal-blur fade" {% block model-id %} id="modal-add-product{{ product.pk }}" {% endblock model-id %} tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add Product</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form {% block Action %} action="{% url 'seller:add_product'%}" {% endblock Action %} method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="mb-3 col-lg-6">
+                                        <label for="name" class="form-label">Product Name</label>
+                                        <input type="text" class="form-control" name="name" placeholder="Enter product name" autocomplete="off">
+                                    </div>
+                                    <div class="mb-3 col-lg-6">
+                                        <label for="category" class="form-label">Category</label>
+                                        <input type="text" class="form-control" name="category" placeholder="Enter Category" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 col-lg-12">
+                                 <label for="description" class="form-label">Description</label>
+                                 <textarea rows="5" name="description" for="description" class="form-control" placeholder="Add Product Description Here" ></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="media" class="form-label">Upload product image</label>
+                                <input type="file" class="form-control" name="media" />
+                            </div>
+                            <div class="mb-3 col-lg-6">
+                                        <label for="price" class="form-label">Price</label>
+                                        <input type="text" class="form-control" name="price" placeholder="₹ 0.00" autocomplete="off">
+                                    </div>
+                            <div class="card-footer text-end">
+                              <button type="submit" class="btn btn-primary">Add Product</button>
+                            </div>
+                        </form>
+          </div>
+        </div>
+      </div>
+    </div>
+{% else %}
+{% comment %}
+      User is not authenticated, redirect to login page.
+      You can customize the URL to match your login URL.
+    {% endcomment %}
+    <script>
+      window.location.href = "{% url 'seller:login' %}";
+    </script>
+    <script>
+    // Add this script to handle the form submission and modal display
+    document.getElementById('product-form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Handle the form submission using JavaScript, e.g., using Fetch API or XMLHttpRequest
+        // You can also use a JavaScript framework like Axios for easier handling
+
+        // After successful submission, close the modal
+        var modal = new bootstrap.Modal(document.getElementById('add-product'));
+        modal.hide();
+    });
+</script>
+{% endif %}

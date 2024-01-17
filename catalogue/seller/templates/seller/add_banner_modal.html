@@ -1,0 +1,48 @@
+{% load static %}
+{% if user.is_authenticated %}
+
+<div class="modal modal-blur fade" {% block model-id %} id="modal-add-banner" {% endblock model-id %} tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Banner</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form {% block Action %} action="{% url 'seller:add_banner' %}" {% endblock Action %} method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Upload banner image</label>
+                        <input type="file" class="form-control" name="image" />
+                    </div>
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-primary">Add Banner</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+{% comment %}
+    User is not authenticated, redirect to login page.
+    You can customize the URL to match your login URL.
+{% endcomment %}
+<script>
+    window.location.href = "{% url 'seller:login' %}";
+</script>
+<script>
+    // Add this script to handle the form submission and modal display
+    document.getElementById('banner-form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Handle the form submission using JavaScript, e.g., using Fetch API or XMLHttpRequest
+        // You can also use a JavaScript framework like Axios for easier handling
+
+        // After successful submission, close the modal
+        var modal = new bootstrap.Modal(document.getElementById('add-banner'));
+        modal.hide();
+    });
+</script>
+{% endif %}
