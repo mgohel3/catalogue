@@ -20,7 +20,13 @@
                                     </div>
                                     <div class="mb-3 col-lg-6">
                                         <label for="category" class="form-label">Category</label>
-                                        <input type="text" class="form-control" name="category" placeholder="Enter Category" autocomplete="off" value="{{product.category}}">
+                                        <select class="form-select" name="category">
+                                            {% for category in categories %}
+                                                <option value="{{ category.id }}" {% if category.id == product.category.id %}selected{% endif %}>{{ category.name }}</option>
+                                            {% endfor %}
+                                        </select> &nbsp
+                                        <label for="new_category" class="form-label">New Category</label>
+                                        <input type="text" class="form-control" name="new_category" placeholder="Enter New Category" autocomplete="off">
                                     </div>
                                 </div>
                             </div>

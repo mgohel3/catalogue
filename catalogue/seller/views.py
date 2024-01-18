@@ -114,6 +114,8 @@ def all_product(request, business_name=None):
 
     # Fetch all products from the database
     all_products = Product.objects.filter(shop=request.user.seller.shop)
+    # Get the list of categories and pass it to the template
+    categories = Category.objects.all()
 
     page_title = 'All Products'
 
@@ -122,6 +124,7 @@ def all_product(request, business_name=None):
         'business_name': business_name,  # Pass the business_name to the template
         'page_title': page_title,
         'all_products': all_products,  # Pass all products to the template
+        'categories': categories,  # Pass categories to the template
     })
 
 def pricing(request):
