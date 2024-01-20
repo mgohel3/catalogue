@@ -44,6 +44,9 @@ class ProductUploadForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['name', 'category', 'description', 'media', 'price']
+        labels = {
+            'category': 'New Category',
+        }
 
 class BannerUploadForm(forms.ModelForm):
     class Meta:
@@ -57,8 +60,20 @@ class BannerUploadForm(forms.ModelForm):
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ['name', 'parent_category']
+        fields = ['name', 'parent_category', 'description']
         labels = {
             'name': 'Category Name',
             'parent_category': 'Parent Category (optional)',
+            'description': 'Description (optional)',
         }
+
+class CategoryEditForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name', 'parent_category', 'description']
+        labels = {
+            'name': 'Category Name',
+            'parent_category': 'Parent Category (optional)',
+            'description': 'Description (optional)',
+        }
+

@@ -1,6 +1,6 @@
 {% load static %}
 {% if user.is_authenticated %}
-
+{% include 'seller/add_category_modal.html' %}
 <div class="modal modal-blur fade" {% block model-id %} id="modal-add-product{{ product.pk }}" {% endblock model-id %} tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -19,7 +19,15 @@
                                     </div>
                                     <div class="mb-3 col-lg-6">
                                         <label for="category" class="form-label">Category</label>
-                                        <input type="text" class="form-control" name="category" placeholder="Enter Category" autocomplete="off">
+                                        <div class="input-group">
+                                            <select class="form-select" name="category" id="category">
+                                                <option value="" selected disabled>Select a category</option>
+                                                {% for category in categories %}
+                                                    <option value="{{ category.id }}" {% if category.id == product.category.id %}selected{% endif %}>{{ category.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <button type="button" class="btn btn-primary" id="addNewCategoryBtn" data-bs-toggle="modal" data-bs-target="#modal-add-category{{ product.pk }}">Add New Category</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -51,6 +59,7 @@
     <script>
       window.location.href = "{% url 'seller:login' %}";
     </script>
+
     <script>
     // Add this script to handle the form submission and modal display
     document.getElementById('product-form').addEventListener('submit', function (event) {

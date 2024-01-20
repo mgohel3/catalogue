@@ -1,7 +1,6 @@
 {% load static %}
 {% if user.is_authenticated %}
 
-
 <div class="modal modal-blur fade" {% block model-id %} id="modal-edit{{ product.pk }}" {% endblock model-id %} tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -24,9 +23,7 @@
                                             {% for category in categories %}
                                                 <option value="{{ category.id }}" {% if category.id == product.category.id %}selected{% endif %}>{{ category.name }}</option>
                                             {% endfor %}
-                                        </select> &nbsp
-                                        <label for="new_category" class="form-label">New Category</label>
-                                        <input type="text" class="form-control" name="new_category" placeholder="Enter New Category" autocomplete="off">
+                                        </select>
                                     </div>
                                 </div>
                             </div>

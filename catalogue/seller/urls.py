@@ -5,7 +5,7 @@ from .views import seller_registration, seller_login, seller_dashboard, seller_p
 from . import views  # Import the views module
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import shop_page, edit_shop, show_banners, all_banners, delete_banner, add_product
+from .views import shop_page, edit_shop, show_banners, all_banners, delete_banner, add_product, edit_product, edit_category
 
 app_name = 'seller'
 
@@ -19,6 +19,8 @@ urlpatterns = [
     path('add_product/', views.add_product, name='add_product'),
     path('add_category/', views.add_category, name='add_category'),
     path('all_category/', views.all_category, name='all_category'),
+    path('edit_category/<int:category_id>/', views.edit_category, name='edit_category'),
+    path('delete_category/<int:category_id>/', views.delete_category, name='delete_category'),
     path('add_banner/', views.add_banner, name='add_banner'),
     path('show_banners/', views.show_banners, name='show_banner'),
     path('all_banners/', views.all_banners, name='all_banners'),

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-23^oapcy@qwwh@ewld_f&8rn)xlor63v$=d8mlj#93-+yx9!z^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','127.0.0.1', 'http://localhost:8000','http://127.0.0.1:8000','gator-true-greatly.ngrok-free.app','http://127.0.0.1:4040']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
@@ -80,7 +80,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'catalogue.wsgi.application'
-
+CSRF_TRUSTED_ORIGINS = ['https://gator-true-greatly.ngrok-free.app']
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

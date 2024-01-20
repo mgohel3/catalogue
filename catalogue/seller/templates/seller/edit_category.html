@@ -1,3 +1,4 @@
+<!-- seller/templates/seller/add_category.html -->
 <style>
     body {
         display: flex;
@@ -35,7 +36,7 @@
             <div class="row g-2 align-items-center">
               <div class="col">
                 <h2 class="page-title">
-                  Edit Product
+                  Edit Category
                 </h2>
               </div>
             </div>
@@ -48,38 +49,34 @@
               <div class="col-lg-8">
                 <div class="card">
                   <div class="card-body">
-                    <h3 class="card-title">Product Information</h3> <hr>
+                    <h3 class="card-title">Edit Category Information</h3> <hr>
                     <form method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="mb-3 col-lg-6">
-                                        <label for="name" class="form-label">Product Name</label>
-                                        <input type="text" class="form-control" name="name" placeholder="Enter product name" autocomplete="off" value="{{product.name}}">
+                                        <label for="name" class="form-label">Name</label>
+                                        <input type="text" class="form-control" name="name" placeholder="Enter Category name" autocomplete="off" value="{{category.name}}">
                                     </div>
                                     <div class="mb-3 col-lg-6">
-                                        <label for="category" class="form-label">Category</label>
-                                        <select class="form-select" name="category">
+                                        <label for="parent_category" class="form-label">Parent Category (optional)</label>
+                                        <select class="form-select" name="parent_category">
+                                            <option value="" selected disabled>Select a parent category</option>
                                             {% for category in categories %}
-                                                <option value="{{ category.id }}" {% if category.id == product.category.id %}selected{% endif %}>{{ category.name }}</option>
+                                                <option value="{{ category.pk }}">{{ category.name }}</option>
                                             {% endfor %}
                                         </select>
+                                        </select>
                                     </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="mb-3 col-lg-12">
                                  <label for="description" class="form-label">Description</label>
-                                 <textarea rows="5" name="description" for="description" class="form-control" placeholder="Add Product Description Here"> {{product.description}} </textarea>
+                                 <textarea rows="5" name="description" for="description" class="form-control" placeholder="Add Category Description Here" ></textarea>
                             </div>
-                            <div class="mb-3">
-                                <label for="media" class="form-label">Upload product image</label>
-                                <input type="file" class="form-control" name="media" value="{{product.media}}" />
-                            </div>
-                            <div class="mb-3 col-lg-6">
-                                        <label for="price" class="form-label">Price</label>
-                                        <input type="text" class="form-control" name="price" placeholder="₹ 0.00" autocomplete="off" value="{{product.price}}">
-                                    </div>
                             <div class="card-footer text-end">
-                              <button type="submit" class="btn btn-primary">Update Product</button>
+                              <button type="submit" class="btn btn-primary">Update Category</button>
                             </div>
                         </form>
                   </div>

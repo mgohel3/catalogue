@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Seller, Shop, Product, Banner, Category
-from .forms import SellerRegistrationForm, SellerProfileForm, ShopForm, ShopEditForm, BannerUploadForm, CategoryForm # Add ShopForm
+from .forms import SellerRegistrationForm, SellerProfileForm, ShopForm, ShopEditForm, BannerUploadForm, CategoryForm, CategoryEditForm # Add ShopForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -12,6 +12,7 @@ from django.core.paginator import Paginator
 from .forms import ProductUploadForm
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 
 def home(request):
     show_header_and_footer = True
@@ -114,8 +115,15 @@ def all_product(request, business_name=None):
 
     # Fetch all products from the database
     all_products = Product.objects.filter(shop=request.user.seller.shop)
+
     # Get the list of categories and pass it to the template
-    categories = Category.objects.all()
+    categories = Category.objects.filter(shop=request.user.seller.shop)
+
+    # Assuming you want to filter products based on a selected category
+    selected_category = request.GET.get('category')
+    if selected_category:
+        all_products = all_products.filter(
+            Q(category__id=selected_category) | Q(category__parent_category__id=selected_category))
 
     page_title = 'All Products'
 
@@ -125,6 +133,7 @@ def all_product(request, business_name=None):
         'page_title': page_title,
         'all_products': all_products,  # Pass all products to the template
         'categories': categories,  # Pass categories to the template
+        'selected_category': selected_category,  # Pass selected category to the template
     })
 
 def pricing(request):
@@ -192,6 +201,8 @@ def shop_page(request, business_name):
     banners = Banner.objects.filter(shop=shop)  # Fetch banners for the specific shop
     return render(request, 'seller/shop_page.html', {'shop': shop, 'products': products,'banners': banners})
 
+
+@login_required
 def add_product(request):
     if request.user.seller.shop:
         if request.method == 'POST':
@@ -211,7 +222,7 @@ def add_product(request):
         return render(request, 'seller/add_product.html', {'form': form})
     else:
         return redirect('seller:all_product')
-
+@login_required
 def edit_product(request, product_id):
     if request.user.seller.shop:
         # Fetch the product instance from the database
@@ -312,6 +323,7 @@ def delete_banner(request, banner_id):
     else:
         return redirect('seller:all_banners')
 
+
 @login_required
 def add_category(request):
     show_header_and_footer = False
@@ -320,6 +332,10 @@ def add_category(request):
         form = CategoryForm(request.POST)
         if form.is_valid():
             category = form.save(commit=False)
+
+            # Ensure the category is associated with the currently logged-in user's seller profile
+            category.shop = request.user.seller.shop
+
             category.save()
 
             # Redirect to the category list page after successful category creation
@@ -329,8 +345,48 @@ def add_category(request):
 
     return render(request, 'seller/add_category.html', {'form': form, 'show_header_and_footer': show_header_and_footer})
 
+@login_required
 def all_category(request):
-    # Fetch all categories from the database
-    categories = Category.objects.all()
+    # Fetch all categories associated with the currently logged-in user's shop
+    all_categories = Category.objects.filter(shop=request.user.seller.shop)
+    return render(request, 'seller/all_category.html', {'all_categories': all_categories})
 
-    return render(request, 'seller/all_category.html', {'categories': categories})
+@login_required
+def edit_category(request, category_id):
+    # Fetch the category instance from the database
+    category = get_object_or_404(Category, id=category_id)
+
+    # Check if the logged-in user owns the shop associated with the category
+    if request.user.seller.shop == category.shop:
+        if request.method == 'POST':
+            form = CategoryEditForm(request.POST, instance=category)
+            if form.is_valid():
+                form.save()
+                # Redirect to the category list page after successful category edit
+                return redirect('seller:all_category')
+        else:
+            form = CategoryEditForm(instance=category)
+
+        return render(request, 'seller/edit_category.html', {'form': form, 'category': category})
+    else:
+        # If the user doesn't own the shop, you can handle it as needed (e.g., show an error page)
+        return render(request, 'seller/error.html',
+                      {'error_message': 'You do not have permission to edit this category.'})
+
+@login_required
+def delete_category(request, category_id):
+    # Fetch the category instance from the database
+    category = get_object_or_404(Category, id=category_id)
+
+    # Check if the logged-in user owns the shop associated with the category
+    if request.user.seller.shop == category.shop:
+        # Delete the category from the database
+        category.delete()
+
+        # Redirect to the dashboard or another page after successful deletion
+        messages.success(request, 'Category deleted successfully.')
+        return redirect('seller:all_category')
+    else:
+        # If the user doesn't own the shop, you can handle it as needed (e.g., show an error page)
+        return render(request, 'seller/error.html',
+                      {'error_message': 'You do not have permission to delete this category.'})

@@ -19,14 +19,25 @@
         flex-grow: 1;
     }
 
-    @media (max-width: 768px) {
-        .page-wrapper {
-            flex-direction: column-reverse;
-        }
-
+    @media (max-width: 992px) {
         .content-wrapper {
             padding-left: 0;
         }
+
+        .page-wrapper {
+            flex-direction: column-reverse;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .card-title {
+            font-size: 1.5rem;
+        }
+
+        .btn-primary {
+            font-size: 0.9rem;
+        }
+
     }
 </style>
 <!-- To load base file of html header and footer including css and js -->
@@ -97,11 +108,13 @@
                                             <!-- Additional details or information here -->
                                         </td>
                                     </tr>
-                                    {% include 'seller/edit_banner_modal.html' %}
                                     {% endfor %}
                                 </tbody>
                             </table>
                         </div>
+                        {% for banner in all_banners %}
+                            {% include 'seller/edit_banner_modal.html' %}
+                        {% endfor %}
                         <div class="card-footer d-flex align-items-center">
                             <p class="m-0 text-muted">Showing <span>{{ all_banners|length }}</span> entries</p>
                         </div>

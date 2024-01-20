@@ -10,6 +10,8 @@ from django.core.files.storage import default_storage
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
     parent_category = models.ForeignKey('self', on_delete=models.SET_NULL, blank=True, null=True, related_name='subcategories')
+    description = models.TextField(null=True, blank=True)
+    shop = models.ForeignKey('Shop', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -82,6 +84,7 @@ class Shop(models.Model):
     tax_gst_number = models.CharField(max_length=50, null=True, blank=True)
     products = models.ManyToManyField(Product, blank=True, related_name='shops')
     banners = models.ManyToManyField(Banner, blank=True, related_name='shops')
+    Category = models.ManyToManyField(Category, blank=True, related_name='shops')
     def __str__(self):
         return f"{self.name} ({self.id})"
 

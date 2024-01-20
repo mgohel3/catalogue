@@ -59,7 +59,13 @@
                                     </div>
                                     <div class="mb-3 col-lg-6">
                                         <label for="category" class="form-label">Category</label>
-                                        <input type="text" class="form-control" name="category" placeholder="Enter Category" autocomplete="off">
+                                        <select class="form-select" name="category" id="category">
+                                            <option value="" selected disabled>Select a category</option>
+                                            {% for category in categories %}
+                                                <option value="{{ category.id }}" {% if category.id == product.category.id %}selected{% endif %}>{{ category.name }}</option>
+                                            {% endfor %}
+                                            <option value="add_new_category">Add New Category</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -146,7 +152,7 @@
         var modal = new bootstrap.Modal(document.getElementById('add-product'));
         modal.hide();
     });
-</script>
+    </script>
     <script src="{% static 'js/dialog.js' %}" defer></script>
         <!-- Libs JS -->
     <script src= "{% static 'libs/list.js/dist/list.js' %}" defer></script>
