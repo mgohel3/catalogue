@@ -35,6 +35,7 @@ CORS_ALLOWED_ORIGINS = [
 
 
 # Application definition
+SITE_ID=1
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -43,11 +44,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'seller',
     'shop',
     'corsheaders',
     'django_social_share',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    # 'seller.apps.SellerConfig',
 ]
+
+SOCIALACCOUNT_PROVIDERS = {
+        'google': {
+            'SCOPE': [ 'profile', 'email', ],
+            'AUTH_PARAMS': { 'access_type': 'online', }
+        }
+    }
+SOCIALACCOUNT_LOGIN_ON_GET=True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -59,6 +74,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'catalogue.urls'
@@ -137,3 +154,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTHENTICATION_BACKENDS = ( 'django.contrib.auth.backends.ModelBackend',
+                            'allauth.account.auth_backends.AuthenticationBackend', )
+LOGIN_REDIRECT_URL = "/seller/register"
+LOGOUT_REDIRECT_URL = "/"

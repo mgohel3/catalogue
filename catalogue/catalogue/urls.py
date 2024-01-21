@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('seller/', include('seller.urls',namespace='seller')),
     path('', home, name='home'),  # Add this line for the root path
+    path('accounts/', include('allauth.urls')),
 ]
 # Serve static files during development
 if settings.DEBUG:
