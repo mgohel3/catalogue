@@ -2,7 +2,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Seller, Shop, Product, Banner, Category
-from allauth.account.views import SignupView
 from .forms import SellerRegistrationForm, SellerProfileForm, ShopForm, ShopEditForm, BannerUploadForm, CategoryForm, CategoryEditForm # Add ShopForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -14,7 +13,7 @@ from .forms import ProductUploadForm
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
-from allauth.socialaccount.models import SocialAccount
+
 
 def home(request):
     show_header_and_footer = True
@@ -27,37 +26,22 @@ def seller_registration(request):
     if request.method == 'POST':
         form = SellerRegistrationForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
+            user = form.save()  # This saves the User instance
+            seller = Seller.objects.create(
+                user=user,
+                first_name=form.cleaned_data['first_name'],
+                last_name=form.cleaned_data['last_name'],
+                email=form.cleaned_data['email'],
+                phone_number=form.cleaned_data['phone_number'],
+            )
 
-            # Check if a user with the given username already exists
-            existing_user = User.objects.filter(username=username).first()
-
-            if existing_user:
-                # If the user already exists, create a Seller instance and associate it with the user
-                seller = Seller.objects.create(
-                    user=existing_user
-                )
-
-                # Redirect to the seller dashboard after successful registration
-                return redirect('seller:dashboard')
-            else:
-                # If the user doesn't exist, create a new user and seller
-                user = User.objects.create(username=username)
-
-                # Create a Seller instance and associate it with the user
-                seller = Seller.objects.create(
-                    user=user
-                )
-
-                # Redirect to the seller dashboard after successful registration
-                return redirect('seller:dashboard')
+            # Redirect to the seller dashboard after successful registration
+            return redirect('seller:dashboard')
     else:
         form = SellerRegistrationForm()
 
     return render(request, 'seller/registration.html', {'form': form, 'show_header_and_footer': show_header_and_footer})
 
-class SellerSignupView(SignupView):
-    form_class = SellerRegistrationForm
 
 def seller_login(request):
     is_login_page = True  # Add this variable to indicate the login page
@@ -70,6 +54,7 @@ def seller_login(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
+                messages.success(request, ("You are Logged in as " + username + "."))
                 # Redirect to the seller dashboard after successful login
                 return redirect('seller:dashboard')
             else:
@@ -81,18 +66,7 @@ def seller_login(request):
 def seller_logout(request):
     logout(request)
     messages.success(request, ("You are Logged out"))
-    return redirect('home')
-
-def google_login_callback(request):
-    # Your existing Google login callback code here...
-
-    # Check if the user already has a Seller
-    user = request.user
-    try:
-        seller = user.seller
-    except Seller.DoesNotExist:
-        # If Seller does not exist, create a new one
-        seller = Seller.objects.create(user=user)
+    return redirect('seller:login')
 
 
 @login_required
@@ -430,3 +404,4 @@ def delete_category(request, category_id):
         # If the user doesn't own the shop, you can handle it as needed (e.g., show an error page)
         return render(request, 'seller/error.html',
                       {'error_message': 'You do not have permission to delete this category.'})
+

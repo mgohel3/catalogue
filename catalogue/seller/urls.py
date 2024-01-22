@@ -5,7 +5,7 @@ from .views import seller_registration, seller_login, seller_dashboard, seller_p
 from . import views  # Import the views module
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import shop_page, edit_shop, show_banners, all_banners, delete_banner, add_product, edit_product, edit_category, SellerSignupView
+from .views import shop_page, edit_shop, show_banners, all_banners, delete_banner, add_product, edit_product, edit_category
 
 app_name = 'seller'
 
@@ -37,7 +37,6 @@ urlpatterns = [
     path('create_shop/', views.create_shop, name='create_shop'),
     path('<str:business_name>/edit_shop/', views.edit_shop, name='edit_shop'),  # Assuming the view name is edit_shop
     path('<str:business_name>/', shop_page, name='shop_page'),  # Assuming the view name is shop_page
-    path('accounts/signup/seller/', SellerSignupView.as_view(), name='account_signup_seller'),
 
 
     # Add more URL patterns for other seller views if needed

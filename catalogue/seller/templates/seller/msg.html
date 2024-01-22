@@ -1,0 +1,15 @@
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}" role="alert" style="position: fixed; top: 80px; right: 20px; z-index: 1000;">
+      <h4 class="alert-title">{{ message.tags|capfirst }}</h4>
+      <div class="text-secondary">{{ message }}</div>
+    </div>
+  {% endfor %}
+  <script>
+    setTimeout(function(){
+      document.querySelectorAll('.alert').forEach(function(alert){
+        alert.remove();
+      });
+    }, 1000);
+  </script>
+{% endif %}

@@ -95,6 +95,8 @@ class Seller(models.Model):
     last_name = models.CharField(max_length=30, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     phone_number = models.CharField(max_length=15, null=True, blank=True)
+    password = models.CharField(max_length=255, null=True)
+    confirm_password = models.CharField(max_length=255, null=True)
 
     # Add any additional fields for the seller profile if needed
 

@@ -1,5 +1,4 @@
 {% load static %}
-{% load socialaccount %}
 <!doctype html>
 
 <html lang="en">
@@ -41,16 +40,9 @@
   <body>
     <script src="{% static 'js/demo-theme.min.js' %}" defer></script>
     <div class="page">
-
+        {% include 'seller/msg.html' %}
         {% if show_header_and_footer %}
                 {% include 'seller/header.html' %}
-        {% endif %}
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
         {% endif %}
             <!-- Your page content here -->
             <div id="content">

@@ -25,7 +25,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('seller/', include('seller.urls',namespace='seller')),
     path('', home, name='home'),  # Add this line for the root path
-    path('accounts/', include('allauth.urls')),
 ]
 # Serve static files during development
 if settings.DEBUG:
@@ -33,6 +32,6 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Configure Admin Title
-admin.site.site_header = "Catalogue Admin"
-admin.site.site_title = "Catalogue Admin"
-admin.site.index_title = "Welcome Admin"
+admin.site.site_header = "QUBU Admin"
+admin.site.site_title = "QUBU Admin"
+admin.site.index_title = "Welcome QUBU Admin"

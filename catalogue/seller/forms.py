@@ -9,58 +9,33 @@ from .models import Seller, Shop, Product, Banner, Category
 
 class SellerRegistrationForm(UserCreationForm):
     username = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class': 'form-control'}), required=True)
+    business_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class':'form-control'}), required=True)
+    first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class':'form-control'}), required=False)
+    last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class':'form-control'}), required=False)
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control'}))
+    phone_number = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'class':'form-control'}), required=False)
 
     class Meta:
         model = User
-        fields = ['username']
+        fields = ['username', 'business_name', 'first_name', 'last_name', 'email', 'phone_number', 'password', 'confirm_password']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        if password and confirm_password and password != confirm_password:
+            self.add_error('confirm_password', 'Passwords do not match.')
+
+    class Meta:
+        model = User
+        fields = ['username', 'business_name', 'first_name', 'last_name', 'email', 'phone_number', 'password1', 'password2']
 
     def __init__(self, *args, **kwargs):
         super(SellerRegistrationForm, self).__init__(*args, **kwargs)
         self.fields['username'].widget.attrs['class'] = 'form-control'
-
-# class SellerRegistrationForm(UserCreationForm):
-#     username = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class': 'form-control'}), required=True)
-#     # business_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class':'form-control'}), required=True)
-#     # first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class':'form-control'}), required=False)
-#     # last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class':'form-control'}), required=False)
-#     # email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control'}))
-#     # phone_number = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'class':'form-control'}), required=False)
-#
-#     class Meta:
-#         model = User
-#         fields = ['username']
-#
-#     def __init__(self, *args, **kwargs):
-#         super(SellerRegistrationForm, self).__init__(*args, **kwargs)
-#         self.fields['username'].widget.attrs['class'] = 'form-control'
-
-# class SellerRegistrationForm(UserCreationForm):
-#     business_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class':'form-control'}), required=True)
-#     first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class':'form-control'}), required=False)
-#     last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class':'form-control'}), required=False)
-#     email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control'}))
-#     phone_number = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'class':'form-control'}), required=False)
-#
-#     class Meta:
-#         model = User
-#         fields = ['username', 'first_name', 'last_name', 'business_name', 'email', 'phone_number', 'password1', 'password2']
-#
-#     def save(self, commit=True):
-#         user = super().save(commit=False)
-#         user.email = self.cleaned_data["email"]
-#         if commit:
-#             user.save()
-#
-#             # Create a Seller instance and associate it with the user
-#             seller = Seller.objects.create(
-#                 user=user,
-#                 first_name=self.cleaned_data['first_name'],
-#                 last_name=self.cleaned_data['last_name'],
-#                 email=self.cleaned_data['email'],
-#                 phone_number=self.cleaned_data['phone_number'],
-#                 business_name=self.cleaned_data['business_name']
-#             )
-#         return user
+        self.fields['password1'].widget.attrs['class'] = 'form-control'
+        self.fields['password2'].widget.attrs['class'] = 'form-control'
 
 class SellerProfileForm(forms.ModelForm):
     class Meta:
